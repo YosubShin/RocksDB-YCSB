@@ -22,6 +22,7 @@ public class RocksDBYcsbBinding extends DB {
 
     @Override
     public void init() throws DBException {
+        System.out.println("Initializing RocksDB...");
         String db_path = DB_PATH;
         options = new Options();
         options.setCreateIfMissing(true)
@@ -60,38 +61,38 @@ public class RocksDBYcsbBinding extends DB {
         options.setMemTableConfig(new SkipListMemTableConfig());
         assert(options.memTableFactoryName().equals("SkipListFactory"));
 
-        options.setTableFormatConfig(new PlainTableConfig());
-        // Plain-Table requires mmap read
-        options.setAllowMmapReads(true);
-        assert(options.tableFactoryName().equals("PlainTable"));
-
-        options.setRateLimiterConfig(new GenericRateLimiterConfig(10000000,
-                10000, 10));
-        options.setRateLimiterConfig(new GenericRateLimiterConfig(10000000));
-
-        Filter bloomFilter = new BloomFilter(10);
-        BlockBasedTableConfig table_options = new BlockBasedTableConfig();
-        table_options.setBlockCacheSize(64 * SizeUnit.KB)
-                .setFilter(bloomFilter)
-                .setCacheNumShardBits(6)
-                .setBlockSizeDeviation(5)
-                .setBlockRestartInterval(10)
-                .setCacheIndexAndFilterBlocks(true)
-                .setHashIndexAllowCollision(false)
-                .setBlockCacheCompressedSize(64 * SizeUnit.KB)
-                .setBlockCacheCompressedNumShardBits(10);
-
-        assert(table_options.blockCacheSize() == 64 * SizeUnit.KB);
-        assert(table_options.cacheNumShardBits() == 6);
-        assert(table_options.blockSizeDeviation() == 5);
-        assert(table_options.blockRestartInterval() == 10);
-        assert(table_options.cacheIndexAndFilterBlocks() == true);
-        assert(table_options.hashIndexAllowCollision() == false);
-        assert(table_options.blockCacheCompressedSize() == 64 * SizeUnit.KB);
-        assert(table_options.blockCacheCompressedNumShardBits() == 10);
-
-        options.setTableFormatConfig(table_options);
-        assert(options.tableFactoryName().equals("BlockBasedTable"));
+//        options.setTableFormatConfig(new PlainTableConfig());
+//        // Plain-Table requires mmap read
+//        options.setAllowMmapReads(true);
+//        assert(options.tableFactoryName().equals("PlainTable"));
+//
+//        options.setRateLimiterConfig(new GenericRateLimiterConfig(10000000,
+//                10000, 10));
+//        options.setRateLimiterConfig(new GenericRateLimiterConfig(10000000));
+//
+//        Filter bloomFilter = new BloomFilter(10);
+//        BlockBasedTableConfig table_options = new BlockBasedTableConfig();
+//        table_options.setBlockCacheSize(64 * SizeUnit.KB)
+//                .setFilter(bloomFilter)
+//                .setCacheNumShardBits(6)
+//                .setBlockSizeDeviation(5)
+//                .setBlockRestartInterval(10)
+//                .setCacheIndexAndFilterBlocks(true)
+//                .setHashIndexAllowCollision(false)
+//                .setBlockCacheCompressedSize(64 * SizeUnit.KB)
+//                .setBlockCacheCompressedNumShardBits(10);
+//
+//        assert(table_options.blockCacheSize() == 64 * SizeUnit.KB);
+//        assert(table_options.cacheNumShardBits() == 6);
+//        assert(table_options.blockSizeDeviation() == 5);
+//        assert(table_options.blockRestartInterval() == 10);
+//        assert(table_options.cacheIndexAndFilterBlocks() == true);
+//        assert(table_options.hashIndexAllowCollision() == false);
+//        assert(table_options.blockCacheCompressedSize() == 64 * SizeUnit.KB);
+//        assert(table_options.blockCacheCompressedNumShardBits() == 10);
+//
+//        options.setTableFormatConfig(table_options);
+//        assert(options.tableFactoryName().equals("BlockBasedTable"));
 
         try {
             db = RocksDB.open(options, db_path);
@@ -105,6 +106,8 @@ public class RocksDBYcsbBinding extends DB {
             assert(db == null);
             assert(false);
         }
+
+        System.out.println("Initializing RocksDB is over");
     }
 
     @Override
@@ -172,7 +175,7 @@ public class RocksDBYcsbBinding extends DB {
         }
 
         System.out.println("Cleaning up RocksDB database...");
-        db.close();
+//        db.close();
 //        options.dispose();
         // Why does it cause error? : "pointer being freed was not allocated"
     }

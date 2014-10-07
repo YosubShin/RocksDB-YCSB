@@ -16,6 +16,7 @@
         <SOURCES>
           <root url="jar://$USER_HOME$/.ideaLibSources/core-0.1.4-sources.jar!/" />
           <root url="file://$MODULE_DIR$/../YCSB/core/src/main/java" />
+          <root url="file://$MODULE_DIR$/../rocksdb/java" />
         </SOURCES>
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
